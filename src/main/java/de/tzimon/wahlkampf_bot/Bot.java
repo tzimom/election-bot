@@ -1,23 +1,19 @@
 package de.tzimon.wahlkampf_bot;
 
-import de.tzimon.wahlkampf_bot.commands.Command;
 import de.tzimon.wahlkampf_bot.commands.CommandManager;
+import de.tzimon.wahlkampf_bot.election.ElectionManager;
 import de.tzimon.wahlkampf_bot.logging.ColoredLogger;
 import de.tzimon.wahlkampf_bot.logging.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.exceptions.MissingAccessException;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.PermissionException;
-import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 import javax.security.auth.login.LoginException;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
 public class Bot {
 
@@ -27,7 +23,7 @@ public class Bot {
     private boolean enabled = true;
     private JDA jda;
 
-    private CommandManager commandManager;
+    private ElectionManager electionManager;
 
     public static void main(String[] args) {
         instance = new Bot();
@@ -45,9 +41,9 @@ public class Bot {
             token = requestToken();
         }
 
-        commandManager = new CommandManager();
-        commandManager.start();
+        electionManager = new ElectionManager();
 
+        new CommandManager().startAsync();
         jda.addEventListener(new EventHandler());
     }
 
@@ -64,9 +60,21 @@ public class Bot {
         }
     }
 
-    public void addReaction(Message message, String emote) {
+    public boolean addReaction(Message message, String emote) {
         try {
             message.addReaction(emote).complete();
+            return true;
+        } catch (PermissionException ignored) {
+            LOGGER.error("Insufficient permission");
+            return false;
+        }
+    }
+
+    public void deleteMessage(TextChannel textChannel, long messageId) {
+        try {
+            textChannel.deleteMessageById(messageId).complete();
+        } catch (ErrorResponseException ignored) {
+            LOGGER.error("Message not found");
         } catch (PermissionException ignored) {
             LOGGER.error("Insufficient permission");
         }
@@ -111,6 +119,10 @@ public class Bot {
 
     public JDA getJda() {
         return jda;
+    }
+
+    public ElectionManager getElectionManager() {
+        return electionManager;
     }
 
 }

@@ -1,10 +1,8 @@
 package de.tzimon.wahlkampf_bot.commands;
 
-import com.sun.media.jfxmedia.logging.Logger;
 import de.tzimon.wahlkampf_bot.Bot;
 import de.tzimon.wahlkampf_bot.commands.executors.ElectionCommand;
 import de.tzimon.wahlkampf_bot.commands.executors.StopCommand;
-import javafx.scene.paint.Stop;
 
 import java.util.*;
 
@@ -23,6 +21,10 @@ public class CommandManager {
         commands.add(new Command("election", new ElectionCommand()));
     }
 
+    public void startAsync() {
+        new Thread(this::start).start();
+    }
+
     public void start() {
         Scanner scanner = new Scanner(System.in);
 
@@ -37,6 +39,10 @@ public class CommandManager {
         if (input.isEmpty())
             return;
 
+        processInput(input);
+    }
+
+    public void processInput(String input) {
         String[] parts = input.split(" ");
 
         if (parts.length == 0)

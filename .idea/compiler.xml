@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="wahlkampf-bot" />
+        <module name="election-bot" />
       </profile>
     </annotationProcessing>
   </component>
