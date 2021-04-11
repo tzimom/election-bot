@@ -14,18 +14,31 @@ public class EventHandler extends ListenerAdapter {
         if (event.getMember().getId().equals(Bot.getInstance().getJda().getSelfUser().getId()))
             return;
 
-        if (!event.getReactionEmote().getAsCodepoints().equalsIgnoreCase(Candidate.CANDIDATE_EMOTE_CODE))
-            return;
+        String reactionCode = event.getReactionEmote().getAsCodepoints();
 
-        Election election = bot.getElectionManager().getElection(event.getChannel().getIdLong(), event.getMessageIdLong());
+        if (reactionCode.equalsIgnoreCase(Candidate.CANDIDATE_EMOTE_CODE)) {
+            Election election = bot.getElectionManager().getElection(event.getChannel().getIdLong(), event.getMessageIdLong());
 
-        if (election == null)
-            return;
+            if (election == null)
+                return;
 
-        election.createCandidate(event.getChannel(), event.getUserIdLong());
+            election.createCandidate(event.getChannel(), event.getUserIdLong());
+        } else if (reactionCode.equalsIgnoreCase(Candidate.VOTE_EMOTE_CODE)) {
+            for (Election election : bot.getElectionManager().getElections()) {
+                for (Candidate candidate : election.getCandidates()) {
+                    if (candidate.getMessage().getIdLong() == event.getMessageIdLong()) {
+                        candidate.vote(event.getUserIdLong());
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent event) {
+        if (event.getMember() == null)
+            return;
+
         if (event.getMember().getId().equals(Bot.getInstance().getJda().getSelfUser().getId()))
             return;
 

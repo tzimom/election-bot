@@ -10,6 +10,8 @@ import java.util.List;
 
 public class Election {
 
+    public static final boolean SELF_VOTES = true;
+
     private Bot bot = Bot.getInstance();
 
     private final long textChannelId;
@@ -33,7 +35,7 @@ public class Election {
         if (!bot.addReaction(message, Candidate.VOTE_EMOTE_CODE))
             return;
 
-        candidates.add(new Candidate(userId, textChannel.getIdLong(), message.getIdLong()));
+        candidates.add(new Candidate(this, userId, message));
     }
 
     public void removeCandidate(long userId) {
@@ -44,16 +46,7 @@ public class Election {
     }
 
     private void removeCandidate(Candidate candidate) {
-        GuildChannel channel = bot.getJda().getGuildChannelById(candidate.getTextChannelId());
-
-        if (channel == null)
-            return;
-
-        if (channel.getType() != ChannelType.TEXT)
-            return;
-
-        TextChannel textChannel = (TextChannel) channel;
-        bot.deleteMessage(textChannel, candidate.getMessageId());
+        bot.deleteMessage(candidate.getMessage());
     }
 
     public long getTextChannelId() {
@@ -62,6 +55,10 @@ public class Election {
 
     public long getMessageId() {
         return messageId;
+    }
+
+    public List<Candidate> getCandidates() {
+        return candidates;
     }
 
 }

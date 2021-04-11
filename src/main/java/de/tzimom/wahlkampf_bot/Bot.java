@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
@@ -72,11 +73,22 @@ public class Bot {
         }
     }
 
-    public void deleteMessage(TextChannel textChannel, long messageId) {
+    public void deleteMessage(Message message) {
         try {
-            textChannel.deleteMessageById(messageId).complete();
-        } catch (ErrorResponseException ignored) {
-            LOGGER.error("Message not found");
+            message.delete().complete();
+        } catch (PermissionException ignored) {
+            LOGGER.error("Insufficient permission");
+        }
+    }
+
+    public void removeReaction(Message message, String emote, long userId) {
+        try {
+            User user = jda.retrieveUserById(userId).complete();
+
+            if (user == null)
+                return;
+
+            message.removeReaction(emote, user).complete();
         } catch (PermissionException ignored) {
             LOGGER.error("Insufficient permission");
         }

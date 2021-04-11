@@ -40,4 +40,8 @@ public class ElectionManager {
         return null;
     }
 
+    public List<Election> getElections() {
+        return elections;
+    }
+
 }

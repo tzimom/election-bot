@@ -1,5 +1,11 @@
 package de.tzimom.wahlkampf_bot.election;
 
+import de.tzimom.wahlkampf_bot.Bot;
+import net.dv8tion.jda.api.entities.Message;
+
+import java.util.HashSet;
+import java.util.Set;
+
 public class Candidate {
 
     public static final String CANDIDATE_EMOTE = ":person_raising_hand:";
@@ -8,26 +14,39 @@ public class Candidate {
     public static final String VOTE_EMOTE = ":raised_hand:";
     public static final String VOTE_EMOTE_CODE = "U+270B";
 
-    private final long userId;
-    private final long textChannelId;
-    private final long messageId;
+    private Bot bot = Bot.getInstance();
 
-    public Candidate(long userId, long textChannelId, long messageId) {
+    private final Election election;
+    private final long userId;
+    private final Message message;
+    private final Set<Long> voters = new HashSet<>();
+
+    public Candidate(Election election, long userId, Message message) {
+        this.election = election;
         this.userId = userId;
-        this.textChannelId = textChannelId;
-        this.messageId = messageId;
+        this.message = message;
+    }
+
+    public void vote(long userId) {
+        if (!Election.SELF_VOTES && userId == this.userId) {
+            bot.removeReaction(message, VOTE_EMOTE_CODE, userId);
+            return;
+        }
+
+        for (Candidate candidate : this.election.getCandidates()) {
+            if (candidate.voters.remove(userId))
+                bot.removeReaction(candidate.message, VOTE_EMOTE_CODE, userId);
+        }
+
+        voters.add(userId);
     }
 
     public long getUserId() {
         return userId;
     }
 
-    public long getTextChannelId() {
-        return textChannelId;
-    }
-
-    public long getMessageId() {
-        return messageId;
+    public Message getMessage() {
+        return message;
     }
 
 }
