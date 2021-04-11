@@ -26,7 +26,7 @@ public class EventHandler extends ListenerAdapter {
         } else if (reactionCode.equalsIgnoreCase(Candidate.VOTE_EMOTE_CODE)) {
             for (Election election : bot.getElectionManager().getElections()) {
                 for (Candidate candidate : election.getCandidates()) {
-                    if (candidate.getMessage().getIdLong() == event.getMessageIdLong()) {
+                    if (candidate.getMessageId() == event.getMessageIdLong()) {
                         candidate.vote(event.getUserIdLong());
                         break;
                     }

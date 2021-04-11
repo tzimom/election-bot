@@ -6,7 +6,9 @@ import net.dv8tion.jda.api.entities.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Election {
 
@@ -35,14 +37,20 @@ public class Election {
         if (!bot.addReaction(message, Candidate.VOTE_EMOTE_CODE))
             return;
 
-        candidates.add(new Candidate(this, userId, message));
+        candidates.add(new Candidate(this, userId, textChannel.getIdLong(), message.getIdLong()));
     }
 
     public void removeCandidate(long userId) {
+        Set<Candidate> remove = new HashSet<>();
+
         for (Candidate candidate : candidates) {
-            if (candidate.getUserId() == userId)
+            if (candidate.getUserId() == userId) {
                 removeCandidate(candidate);
+                remove.add(candidate);
+            }
         }
+
+        candidates.removeAll(remove);
     }
 
     private void removeCandidate(Candidate candidate) {

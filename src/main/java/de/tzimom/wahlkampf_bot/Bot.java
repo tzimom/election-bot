@@ -81,6 +81,15 @@ public class Bot {
         }
     }
 
+    public Message retrieveMessage(TextChannel textChannel, long messageId) {
+        try {
+            return textChannel.retrieveMessageById(messageId).complete();
+        } catch (PermissionException ignored) {
+            LOGGER.error("Insufficient permission");
+            return null;
+        }
+    }
+
     public void removeReaction(Message message, String emote, long userId) {
         try {
             User user = jda.retrieveUserById(userId).complete();

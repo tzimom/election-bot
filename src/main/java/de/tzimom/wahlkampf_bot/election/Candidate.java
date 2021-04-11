@@ -1,7 +1,10 @@
 package de.tzimom.wahlkampf_bot.election;
 
 import de.tzimom.wahlkampf_bot.Bot;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,35 +21,49 @@ public class Candidate {
 
     private final Election election;
     private final long userId;
-    private final Message message;
+    private final long textChannelId;
+    private final long messageId;
     private final Set<Long> voters = new HashSet<>();
 
-    public Candidate(Election election, long userId, Message message) {
+    public Candidate(Election election, long userId, long textChannelId, long messageId) {
         this.election = election;
         this.userId = userId;
-        this.message = message;
+        this.textChannelId = textChannelId;
+        this.messageId = messageId;
     }
 
     public void vote(long userId) {
         if (!Election.SELF_VOTES && userId == this.userId) {
-            bot.removeReaction(message, VOTE_EMOTE_CODE, userId);
+            bot.removeReaction(getMessage(), VOTE_EMOTE_CODE, userId);
             return;
         }
 
-        for (Candidate candidate : this.election.getCandidates()) {
+        for (Candidate candidate : this.election.getCandidates())
             if (candidate.voters.remove(userId))
-                bot.removeReaction(candidate.message, VOTE_EMOTE_CODE, userId);
-        }
+                bot.removeReaction(candidate.getMessage(), VOTE_EMOTE_CODE, userId);
 
         voters.add(userId);
+    }
+
+    public Message getMessage() {
+        GuildChannel channel = bot.getJda().getGuildChannelById(textChannelId);
+
+        if (channel == null)
+            return null;
+
+        if (channel.getType() != ChannelType.TEXT)
+            return null;
+
+        TextChannel textChannel = (TextChannel) channel;
+        return bot.retrieveMessage(textChannel, messageId);
     }
 
     public long getUserId() {
         return userId;
     }
 
-    public Message getMessage() {
-        return message;
+    public long getMessageId() {
+        return messageId;
     }
 
 }
