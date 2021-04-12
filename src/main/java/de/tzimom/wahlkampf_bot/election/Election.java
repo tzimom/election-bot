@@ -4,7 +4,6 @@ import de.tzimom.wahlkampf_bot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
-import javax.xml.soap.Text;
 import java.time.ZoneId;
 import java.util.*;
 

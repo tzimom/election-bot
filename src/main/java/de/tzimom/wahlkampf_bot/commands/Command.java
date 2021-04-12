@@ -19,10 +19,6 @@ public class Command {
             executor.execute(args);
     }
 
-//    public void setExecutor(CommandExecutor executor) {
-//        this.executor = executor;
-//    }
-
     public String getName() {
         return name;
     }
