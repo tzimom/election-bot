@@ -4,11 +4,9 @@ import de.tzimom.wahlkampf_bot.Bot;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.xml.soap.Text;
+import java.time.ZoneId;
+import java.util.*;
 
 public class Election {
 
@@ -26,7 +24,7 @@ public class Election {
     }
 
     public void createCandidate(TextChannel textChannel, long userId) {
-        MessageEmbed embed = new EmbedBuilder().setColor(new Color(0xeccc68)).setTitle("Kandidatur").setDescription
+        MessageEmbed embed = new EmbedBuilder().setColor(Bot.EMBED_COLOR).setTitle("Kandidatur").setDescription
                 ("Reagiere mit " + Candidate.VOTE_EMOTE + ", um für <@" + userId + "> zu stimmen").build();
 
         Message message = bot.sendMessageEmbed(textChannel, embed);
@@ -37,7 +35,7 @@ public class Election {
         if (!bot.addReaction(message, Candidate.VOTE_EMOTE_CODE))
             return;
 
-        candidates.add(new Candidate(this, userId, textChannel.getIdLong(), message.getIdLong()));
+        candidates.add(new Candidate(this, userId, message.getIdLong()));
     }
 
     public void removeCandidate(long userId) {
@@ -57,12 +55,58 @@ public class Election {
         bot.deleteMessage(candidate.getMessage());
     }
 
-    public long getTextChannelId() {
-        return textChannelId;
+    public void finish() {
+        GuildChannel channel = bot.getJda().getGuildChannelById(textChannelId);
+
+        if (channel == null)
+            return;
+
+        if (channel.getType() != ChannelType.TEXT)
+            return;
+
+        TextChannel textChannel = (TextChannel) channel;
+
+        StringBuilder description = new StringBuilder("Die Richter Wahl ist beendet.\n\n");
+
+        if (candidates.size() == 0)
+            description.append("Es gab keine Kandidaten.");
+        else {
+            candidates.stream().sorted(Comparator.comparing(Candidate::getVotes).reversed()).forEach(candidate ->
+                    description.append("<@").append(candidate.getUserId()).append("> » ").append(candidate.getVotes())
+                            .append(candidate.getVotes() == 1 ? " Stimme" : " Stimmen").append("\n"));
+        }
+
+        MessageEmbed embed = new EmbedBuilder().setColor(Bot.EMBED_COLOR).setTitle("Richter Wahl Ergebnisse")
+                .setDescription(description.toString()).setTimestamp(new Date().toInstant().atZone(ZoneId.systemDefault())).build();
+        bot.sendMessageEmbed(textChannel, embed);
+        cleanUp(textChannel);
     }
 
-    public long getMessageId() {
-        return messageId;
+    private void cleanUp(TextChannel textChannel) {
+        Message message = bot.retrieveMessage(textChannel, messageId);
+
+        if (message != null)
+            bot.deleteMessage(message);
+
+        for (Candidate candidate : candidates) {
+            Message candidateMessage = bot.retrieveMessage(textChannel, candidate.getMessageId());
+
+            if (candidateMessage != null)
+                bot.deleteMessage(candidateMessage);
+        }
+    }
+
+    public Candidate findCandidate(long messageId) {
+        for (Candidate candidate : candidates) {
+            if (candidate.getMessageId() == messageId)
+                return candidate;
+        }
+
+        return null;
+    }
+
+    public long getTextChannelId() {
+        return textChannelId;
     }
 
     public List<Candidate> getCandidates() {

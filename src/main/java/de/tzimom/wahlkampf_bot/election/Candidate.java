@@ -21,14 +21,12 @@ public class Candidate {
 
     private final Election election;
     private final long userId;
-    private final long textChannelId;
     private final long messageId;
     private final Set<Long> voters = new HashSet<>();
 
-    public Candidate(Election election, long userId, long textChannelId, long messageId) {
+    public Candidate(Election election, long userId, long messageId) {
         this.election = election;
         this.userId = userId;
-        this.textChannelId = textChannelId;
         this.messageId = messageId;
     }
 
@@ -39,14 +37,18 @@ public class Candidate {
         }
 
         for (Candidate candidate : this.election.getCandidates())
-            if (candidate.voters.remove(userId))
+            if (candidate.removeVote(userId))
                 bot.removeReaction(candidate.getMessage(), VOTE_EMOTE_CODE, userId);
 
         voters.add(userId);
     }
 
+    public boolean removeVote(long userId) {
+        return voters.remove(userId);
+    }
+
     public Message getMessage() {
-        GuildChannel channel = bot.getJda().getGuildChannelById(textChannelId);
+        GuildChannel channel = bot.getJda().getGuildChannelById(election.getTextChannelId());
 
         if (channel == null)
             return null;
@@ -64,6 +66,10 @@ public class Candidate {
 
     public long getMessageId() {
         return messageId;
+    }
+
+    public int getVotes() {
+        return voters.size();
     }
 
 }

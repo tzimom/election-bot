@@ -10,15 +10,16 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
 import java.util.Scanner;
 
 public class Bot {
 
     public static final Logger LOGGER = new ColoredLogger();
+    public static final Color EMBED_COLOR = new Color(0xeccc68);
 
     private static Bot instance;
     private boolean enabled = true;
