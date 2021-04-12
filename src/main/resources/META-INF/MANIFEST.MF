@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: de.tzimom.wahlkampf_bot.Bot
+Main-Class: de.tzimom.election_bot.Bot
 

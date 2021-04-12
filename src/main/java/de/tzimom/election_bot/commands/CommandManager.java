@@ -1,8 +1,8 @@
-package de.tzimom.wahlkampf_bot.commands;
+package de.tzimom.election_bot.commands;
 
-import de.tzimom.wahlkampf_bot.commands.executors.ElectionCommand;
-import de.tzimom.wahlkampf_bot.commands.executors.StopCommand;
-import de.tzimom.wahlkampf_bot.Bot;
+import de.tzimom.election_bot.commands.executors.ElectionCommand;
+import de.tzimom.election_bot.commands.executors.StopCommand;
+import de.tzimom.election_bot.Bot;
 
 import java.util.*;
 

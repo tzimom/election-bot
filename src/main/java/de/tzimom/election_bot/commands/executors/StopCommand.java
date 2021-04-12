@@ -1,7 +1,7 @@
-package de.tzimom.wahlkampf_bot.commands.executors;
+package de.tzimom.election_bot.commands.executors;
 
-import de.tzimom.wahlkampf_bot.commands.CommandExecutor;
-import de.tzimom.wahlkampf_bot.Bot;
+import de.tzimom.election_bot.commands.CommandExecutor;
+import de.tzimom.election_bot.Bot;
 
 public class StopCommand implements CommandExecutor {
 

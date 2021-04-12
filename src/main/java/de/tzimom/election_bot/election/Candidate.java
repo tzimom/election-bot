@@ -1,6 +1,6 @@
-package de.tzimom.wahlkampf_bot.election;
+package de.tzimom.election_bot.election;
 
-import de.tzimom.wahlkampf_bot.Bot;
+import de.tzimom.election_bot.Bot;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Message;

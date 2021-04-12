@@ -1,4 +1,4 @@
-package de.tzimom.wahlkampf_bot.commands;
+package de.tzimom.election_bot.commands;
 
 public class Command {
 

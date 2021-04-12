@@ -1,9 +1,9 @@
-package de.tzimom.wahlkampf_bot;
+package de.tzimom.election_bot;
 
-import de.tzimom.wahlkampf_bot.commands.CommandManager;
-import de.tzimom.wahlkampf_bot.election.ElectionManager;
-import de.tzimom.wahlkampf_bot.logging.ColoredLogger;
-import de.tzimom.wahlkampf_bot.logging.Logger;
+import de.tzimom.election_bot.commands.CommandManager;
+import de.tzimom.election_bot.election.ElectionManager;
+import de.tzimom.election_bot.logging.ColoredLogger;
+import de.tzimom.election_bot.logging.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Message;

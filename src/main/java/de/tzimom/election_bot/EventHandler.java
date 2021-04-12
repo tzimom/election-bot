@@ -1,7 +1,7 @@
-package de.tzimom.wahlkampf_bot;
+package de.tzimom.election_bot;
 
-import de.tzimom.wahlkampf_bot.election.Election;
-import de.tzimom.wahlkampf_bot.election.Candidate;
+import de.tzimom.election_bot.election.Election;
+import de.tzimom.election_bot.election.Candidate;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;

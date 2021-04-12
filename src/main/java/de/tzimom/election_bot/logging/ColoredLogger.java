@@ -1,4 +1,4 @@
-package de.tzimom.wahlkampf_bot.logging;
+package de.tzimom.election_bot.logging;
 
 public class ColoredLogger implements Logger {
 

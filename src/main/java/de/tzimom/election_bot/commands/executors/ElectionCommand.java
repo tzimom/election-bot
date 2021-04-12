@@ -1,8 +1,7 @@
-package de.tzimom.wahlkampf_bot.commands.executors;
+package de.tzimom.election_bot.commands.executors;
 
-import de.tzimom.wahlkampf_bot.commands.CommandExecutor;
-import de.tzimom.wahlkampf_bot.Bot;
-import de.tzimom.wahlkampf_bot.election.Election;
+import de.tzimom.election_bot.commands.CommandExecutor;
+import de.tzimom.election_bot.Bot;
 import net.dv8tion.jda.api.entities.*;
 
 public class ElectionCommand implements CommandExecutor {
