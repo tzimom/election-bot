@@ -55,24 +55,16 @@ public class Election {
     }
 
     public void finish() {
-        GuildChannel channel = bot.getJda().getGuildChannelById(textChannelId);
+        TextChannel textChannel = bot.getTextChannel(textChannelId);
 
-        if (channel == null)
-            return;
-
-        if (channel.getType() != ChannelType.TEXT)
-            return;
-
-        TextChannel textChannel = (TextChannel) channel;
-
-        StringBuilder description = new StringBuilder("Die Richter Wahl ist beendet.\n\n");
+        StringBuilder description = new StringBuilder("Die Richter Wahl ist beendet.\n");
 
         if (candidates.size() == 0)
             description.append("Es gab keine Kandidaten.");
         else {
             candidates.stream().sorted(Comparator.comparing(Candidate::getVotes).reversed()).forEach(candidate ->
-                    description.append("<@").append(candidate.getUserId()).append("> » ").append(candidate.getVotes())
-                            .append(candidate.getVotes() == 1 ? " Stimme" : " Stimmen").append("\n"));
+                    description.append("\n").append("<@").append(candidate.getUserId()).append("> » ").append
+                            (candidate.getVotes()).append(candidate.getVotes() == 1 ? " Stimme" : " Stimmen"));
         }
 
         MessageEmbed embed = new EmbedBuilder().setColor(Bot.EMBED_COLOR).setTitle("Richter Wahl Ergebnisse")

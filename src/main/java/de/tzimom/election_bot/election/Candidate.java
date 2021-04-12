@@ -1,8 +1,6 @@
 package de.tzimom.election_bot.election;
 
 import de.tzimom.election_bot.Bot;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -48,15 +46,11 @@ public class Candidate {
     }
 
     public Message getMessage() {
-        GuildChannel channel = bot.getJda().getGuildChannelById(election.getTextChannelId());
+        TextChannel textChannel = bot.getTextChannel(election.getTextChannelId());
 
-        if (channel == null)
+        if (textChannel == null)
             return null;
 
-        if (channel.getType() != ChannelType.TEXT)
-            return null;
-
-        TextChannel textChannel = (TextChannel) channel;
         return bot.retrieveMessage(textChannel, messageId);
     }
 

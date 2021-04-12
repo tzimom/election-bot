@@ -22,17 +22,12 @@ public class ElectionCommand implements CommandExecutor {
                 return;
             }
 
-            GuildChannel channel = bot.getJda().getGuildChannelById(channelId);
+            TextChannel textChannel = bot.getTextChannel(channelId);
 
-            if (channel == null) {
+            if (textChannel == null) {
                 Bot.LOGGER.error("Invalid channel id");
                 return;
             }
-
-            if (channel.getType() != ChannelType.TEXT)
-                return;
-
-            TextChannel textChannel = (TextChannel) channel;
 
             if (bot.getElectionManager().createElection(textChannel))
                 Bot.LOGGER.info("Sent election message into #" + textChannel.getName() + "@" + textChannel.getGuild().getName());

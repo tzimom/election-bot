@@ -6,10 +6,7 @@ import de.tzimom.election_bot.logging.ColoredLogger;
 import de.tzimom.election_bot.logging.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 import javax.security.auth.login.LoginException;
@@ -55,55 +52,6 @@ public class Bot {
         jda.shutdown();
     }
 
-    public Message sendMessageEmbed(TextChannel textChannel, MessageEmbed embed) {
-        try {
-            return textChannel.sendMessage(embed).complete();
-        } catch (PermissionException ignored) {
-            LOGGER.error("Insufficient permission");
-            return null;
-        }
-    }
-
-    public boolean addReaction(Message message, String emote) {
-        try {
-            message.addReaction(emote).complete();
-            return true;
-        } catch (PermissionException ignored) {
-            LOGGER.error("Insufficient permission");
-            return false;
-        }
-    }
-
-    public void deleteMessage(Message message) {
-        try {
-            message.delete().complete();
-        } catch (PermissionException ignored) {
-            LOGGER.error("Insufficient permission");
-        }
-    }
-
-    public Message retrieveMessage(TextChannel textChannel, long messageId) {
-        try {
-            return textChannel.retrieveMessageById(messageId).complete();
-        } catch (PermissionException ignored) {
-            LOGGER.error("Insufficient permission");
-            return null;
-        }
-    }
-
-    public void removeReaction(Message message, String emote, long userId) {
-        try {
-            User user = jda.retrieveUserById(userId).complete();
-
-            if (user == null)
-                return;
-
-            message.removeReaction(emote, user).complete();
-        } catch (PermissionException ignored) {
-            LOGGER.error("Insufficient permission");
-        }
-    }
-
     private boolean login(String token) {
         try {
             jda = JDABuilder.createDefault(token).build();
@@ -131,6 +79,71 @@ public class Bot {
         }
 
         return token;
+    }
+
+    public Message sendMessageEmbed(TextChannel textChannel, MessageEmbed embed) {
+        try {
+            return textChannel.sendMessage(embed).complete();
+        } catch (PermissionException ignored) {
+            sendInsufficientPermissions();
+            return null;
+        }
+    }
+
+    public Message retrieveMessage(TextChannel textChannel, long messageId) {
+        try {
+            return textChannel.retrieveMessageById(messageId).complete();
+        } catch (PermissionException ignored) {
+            sendInsufficientPermissions();
+            return null;
+        }
+    }
+
+    public void deleteMessage(Message message) {
+        try {
+            message.delete().complete();
+        } catch (PermissionException ignored) {
+            sendInsufficientPermissions();
+        }
+    }
+
+    public boolean addReaction(Message message, String emote) {
+        try {
+            message.addReaction(emote).complete();
+            return true;
+        } catch (PermissionException ignored) {
+            sendInsufficientPermissions();
+            return false;
+        }
+    }
+
+    public void removeReaction(Message message, String emote, long userId) {
+        try {
+            User user = jda.retrieveUserById(userId).complete();
+
+            if (user == null)
+                return;
+
+            message.removeReaction(emote, user).complete();
+        } catch (PermissionException ignored) {
+            sendInsufficientPermissions();
+        }
+    }
+
+    private void sendInsufficientPermissions() {
+        LOGGER.error("Insufficient permission");
+    }
+
+    public TextChannel getTextChannel(long id) {
+        GuildChannel channel = jda.getGuildChannelById(id);
+
+        if (channel == null)
+            return null;
+
+        if (channel.getType() != ChannelType.TEXT)
+            return null;
+
+        return (TextChannel) channel;
     }
 
     public static Bot getInstance() {
