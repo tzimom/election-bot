@@ -1,6 +1,7 @@
 package de.tzimom.election_bot.commands;
 
 import de.tzimom.election_bot.commands.executors.ElectionCommand;
+import de.tzimom.election_bot.commands.executors.HelpCommand;
 import de.tzimom.election_bot.commands.executors.StopCommand;
 import de.tzimom.election_bot.Bot;
 
@@ -17,6 +18,7 @@ public class CommandManager {
     }
 
     private void registerCommands() {
+        commands.add(new Command("help", new HelpCommand()));
         commands.add(new Command("stop", new StopCommand()));
         commands.add(new Command("election", new ElectionCommand()));
     }
@@ -81,6 +83,10 @@ public class CommandManager {
         }
 
         return null;
+    }
+
+    public Set<Command> getCommands() {
+        return commands;
     }
 
 }

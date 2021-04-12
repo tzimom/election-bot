@@ -5,12 +5,8 @@ public class Command {
     private String name;
     private CommandExecutor executor;
 
-    public Command(String name) {
-        this.name = name;
-    }
-
     public Command(String name, CommandExecutor executor) {
-        this(name);
+        this.name = name;
         this.executor = executor;
     }
 

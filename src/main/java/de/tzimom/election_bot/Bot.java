@@ -23,6 +23,7 @@ public class Bot {
     private JDA jda;
 
     private ElectionManager electionManager;
+    private CommandManager commandManager;
 
     public static void main(String[] args) {
         instance = new Bot();
@@ -41,8 +42,9 @@ public class Bot {
         }
 
         electionManager = new ElectionManager();
+        commandManager = new CommandManager();
 
-        new CommandManager().startAsync();
+        commandManager.startAsync();
         jda.addEventListener(new EventHandler());
     }
 
@@ -160,6 +162,10 @@ public class Bot {
 
     public ElectionManager getElectionManager() {
         return electionManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
     }
 
 }

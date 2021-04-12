@@ -2,6 +2,7 @@ package de.tzimom.election_bot.commands.executors;
 
 import de.tzimom.election_bot.commands.CommandExecutor;
 import de.tzimom.election_bot.Bot;
+import de.tzimom.election_bot.commands.Usage;
 import net.dv8tion.jda.api.entities.*;
 
 public class ElectionCommand implements CommandExecutor {
@@ -32,11 +33,7 @@ public class ElectionCommand implements CommandExecutor {
             if (bot.getElectionManager().createElection(textChannel))
                 Bot.LOGGER.info("Sent election message into #" + textChannel.getName() + "@" + textChannel.getGuild().getName());
         } else
-            sendUsage();
-    }
-
-    private void sendUsage() {
-        Bot.LOGGER.error("Usage: election [create <TextChannelID>]|finish");
+            Usage.ELECTION.sendUsage();
     }
 
 }
